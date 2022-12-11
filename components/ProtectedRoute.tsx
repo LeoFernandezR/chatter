@@ -11,7 +11,7 @@ const ProtectedRoute = ({children}: {children: React.ReactNode}) => {
     if (!user) {
       router.push({
         pathname: "/",
-        query: {from: router.pathname},
+        query: {from: router.asPath},
       });
     }
   }, [router, user]);
