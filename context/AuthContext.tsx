@@ -29,8 +29,13 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const login = () => {
-    signInWithPopup(auth, githubProvider);
+  const login = async () => {
+    await signInWithPopup(auth, githubProvider);
+    if (router.query && router.query.from && typeof router.query.from === "string") {
+      router.push(router.query.from);
+    } else {
+      router.push("/chat");
+    }
   };
 
   const logout = async () => {
@@ -46,7 +51,6 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
           displayName: user.displayName,
           photoURL: user.photoURL,
         });
-        router.push("/chat");
       } else {
         setUser(null);
       }
@@ -54,7 +58,7 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   return (
     <AuthContext.Provider value={{user, login, logout}}>
