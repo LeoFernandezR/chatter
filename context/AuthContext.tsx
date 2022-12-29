@@ -2,7 +2,7 @@ import {onAuthStateChanged, signInWithPopup, signOut} from "firebase/auth";
 import {useRouter} from "next/router";
 import React, {useState, createContext, useEffect, useContext} from "react";
 
-import {auth, githubProvider} from "../firebase/firebase";
+import {auth, githubProvider, googleProvider} from "../firebase/firebase";
 
 interface User {
   uid: string;
@@ -12,13 +12,15 @@ interface User {
 
 interface ContextValues {
   user: User | null;
-  login: VoidFunction;
+  loginWithGithub: VoidFunction;
+  loginWithGoogle: VoidFunction;
   logout: VoidFunction;
 }
 
 const AuthContext = createContext<ContextValues>({
   user: null,
-  login: () => {},
+  loginWithGithub: () => {},
+  loginWithGoogle: () => {},
   logout: () => {},
 });
 
@@ -29,8 +31,16 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const login = async () => {
+  const loginWithGithub = async () => {
     await signInWithPopup(auth, githubProvider);
+    if (router.query && router.query.from && typeof router.query.from === "string") {
+      router.push(router.query.from);
+    } else {
+      router.push("/chat");
+    }
+  };
+  const loginWithGoogle = async () => {
+    await signInWithPopup(auth, googleProvider);
     if (router.query && router.query.from && typeof router.query.from === "string") {
       router.push(router.query.from);
     } else {
@@ -61,7 +71,7 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
   }, [router]);
 
   return (
-    <AuthContext.Provider value={{user, login, logout}}>
+    <AuthContext.Provider value={{user, loginWithGithub, loginWithGoogle, logout}}>
       {loading ? null : children}
     </AuthContext.Provider>
   );
