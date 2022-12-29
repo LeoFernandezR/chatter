@@ -1,19 +1,23 @@
-import {addDoc, collection, doc, onSnapshot, orderBy, query, Timestamp} from "firebase/firestore";
-import React, {useEffect, useState} from "react";
+import {addDoc, collection, onSnapshot, orderBy, query, Timestamp} from "firebase/firestore";
+import {useRouter} from "next/router";
+import {useEffect, useState} from "react";
 
+import {useAuth} from "../context/AuthContext";
 import {db} from "../firebase/firebase";
-
-type Props = {
-  roomID?: string;
-};
 
 export interface Message {
   message: string;
   timestamp: string;
+  userName: string;
+  userID: string;
 }
 
-const useMessages = ({roomID}: Props) => {
+const useMessages = () => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const {user} = useAuth();
+  const router = useRouter();
+
+  const roomID = router.query.roomID as string;
 
   const sendMessage = async (message: string) => {
     if (!roomID) return;
@@ -21,6 +25,8 @@ const useMessages = ({roomID}: Props) => {
     await addDoc(collection(db, "rooms", roomID, "messages"), {
       message: message,
       timestamp: Timestamp.now(),
+      userName: user?.displayName,
+      userID: user?.uid,
     });
   };
 

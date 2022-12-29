@@ -1,12 +1,13 @@
 import {useRouter} from "next/router";
 import React, {useState} from "react";
+import Avatar from "boring-avatars";
 
 import useMessages from "../hooks/useMessages";
 
 const RoomMessages = () => {
   const [message, setMessage] = useState("");
   const {query} = useRouter();
-  const {sendMessage, messages} = useMessages({roomID: query.roomID as string | undefined});
+  const {sendMessage, messages} = useMessages();
 
   if (!query.roomID) {
     return null;
@@ -16,7 +17,20 @@ const RoomMessages = () => {
     <div>
       <ul>
         {messages.map((message) => (
-          <li key={message.timestamp}>{message.message}</li>
+          <li key={message.timestamp} className="flex items-center justify-center gap-2 ">
+            <div className="align-top">
+              <Avatar
+                colors={["#6CCFF6", "#FEA0DC", "#98CE00", "#FFFFFC"]}
+                name={message.userID}
+                size={50}
+                variant="beam"
+              />
+            </div>
+            <div className="flex-1">
+              <h1 className="font-bold">{message.userName}</h1>
+              <div>{message.message}</div>
+            </div>
+          </li>
         ))}
       </ul>
       <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
