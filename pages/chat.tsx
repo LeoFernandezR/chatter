@@ -8,9 +8,9 @@ import useRooms from "../hooks/useRooms";
 
 const Chat = () => {
   const [roomName, setRoomName] = useState("");
-  const {user, logout} = useAuth();
+  const {logout} = useAuth();
   const {query} = useRouter();
-  const {createRoom, rooms, deleteRoom} = useRooms();
+  const {createRoom, rooms} = useRooms();
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen gap-2 text-xl">
@@ -26,9 +26,6 @@ const Chat = () => {
                 >
                   {room.name}
                 </Link>
-                <button className="text-red-500" onClick={() => deleteRoom(room.id)}>
-                  x
-                </button>
               </li>
             ))}
           </ul>

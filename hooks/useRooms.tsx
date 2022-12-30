@@ -1,13 +1,4 @@
-import {
-  onSnapshot,
-  query,
-  collection,
-  setDoc,
-  doc,
-  Timestamp,
-  getDoc,
-  deleteDoc,
-} from "firebase/firestore";
+import {onSnapshot, query, collection, setDoc, doc, Timestamp, getDoc} from "firebase/firestore";
 import {useEffect, useState} from "react";
 
 import {db} from "../firebase/firebase";
@@ -35,10 +26,6 @@ const useRooms = () => {
     });
   };
 
-  const deleteRoom = async (roomID: string) => {
-    await deleteDoc(doc(db, "rooms", roomID));
-  };
-
   useEffect(() => {
     const q = query(collection(db, "rooms"));
     const unsub = onSnapshot(q, (querySnapshots) => {
@@ -56,7 +43,7 @@ const useRooms = () => {
     };
   }, []);
 
-  return {rooms, createRoom, deleteRoom};
+  return {rooms, createRoom};
 };
 
 export default useRooms;
