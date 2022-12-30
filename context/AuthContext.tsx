@@ -1,6 +1,9 @@
 import {
+  AuthProvider,
   GithubAuthProvider,
   GoogleAuthProvider,
+  fetchSignInMethodsForEmail,
+  linkWithCredential,
   onAuthStateChanged,
   signInWithPopup,
   signOut,
@@ -30,6 +33,17 @@ const AuthContext = createContext<ContextValues>({
   logout: () => {},
 });
 
+type ProvidersId = "google.com" | "github.com";
+
+const getProviderById = (id: ProvidersId) => {
+  const providers = {
+    [GithubAuthProvider.PROVIDER_ID]: githubProvider,
+    [GoogleAuthProvider.PROVIDER_ID]: googleProvider,
+  };
+
+  return providers[id];
+};
+
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthContextProvider = ({children}: {children: React.ReactNode}) => {
@@ -39,32 +53,38 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
 
   const loginWithProvider = async (provider: GithubAuthProvider | GoogleAuthProvider) => {
     try {
-      await signInWithPopup(auth, githubProvider);
+      await signInWithPopup(auth, provider);
       if (router.query && router.query.from && typeof router.query.from === "string") {
         router.push(router.query.from);
       } else {
         router.push("/chat");
       }
-    } catch (error) {
-      error;
+    } catch (error: any) {
+      if (error.code === "auth/account-exists-with-different-credential") {
+        const oldCredential = error.credential;
+        const email = error.customData.email;
+
+        const [recommendMethod] = await fetchSignInMethodsForEmail(auth, email).catch((err) => {
+          console.error(err);
+
+          return [];
+        });
+
+        const provider = getProviderById(recommendMethod as ProvidersId);
+
+        const {user} = await signInWithPopup(auth, provider);
+
+        await linkWithCredential(user, oldCredential);
+      }
     }
   };
 
   const loginWithGithub = async () => {
-    await signInWithPopup(auth, githubProvider);
-    if (router.query && router.query.from && typeof router.query.from === "string") {
-      router.push(router.query.from);
-    } else {
-      router.push("/chat");
-    }
+    await loginWithProvider(githubProvider);
   };
+
   const loginWithGoogle = async () => {
-    await signInWithPopup(auth, googleProvider);
-    if (router.query && router.query.from && typeof router.query.from === "string") {
-      router.push(router.query.from);
-    } else {
-      router.push("/chat");
-    }
+    await loginWithProvider(googleProvider);
   };
 
   const logout = async () => {
