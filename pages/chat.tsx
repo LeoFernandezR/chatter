@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {useRouter} from "next/router";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import RoomMessages from "../components/RoomMessages";
 import {useAuth} from "../context/AuthContext";
@@ -9,8 +9,15 @@ import useRooms from "../hooks/useRooms";
 const Chat = () => {
   const [roomName, setRoomName] = useState("");
   const {logout} = useAuth();
-  const {query} = useRouter();
-  const {createRoom, rooms} = useRooms();
+  const {query, push} = useRouter();
+  const {createRoom, rooms, deleteRoom} = useRooms();
+
+  useEffect(() => {
+    if (typeof query.roomID !== "string") return;
+    if (!rooms.find((room) => room.id === query.roomID)) {
+      push("/chat");
+    }
+  }, [rooms, push, query.roomID]);
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen gap-2 text-xl">
@@ -26,6 +33,9 @@ const Chat = () => {
                 >
                   {room.name}
                 </Link>
+                <button className="text-red-500" onClick={() => deleteRoom(room.id)}>
+                  X
+                </button>
               </li>
             ))}
           </ul>
