@@ -1,10 +1,4 @@
-import {
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithPopup,
-  signOut,
-} from "firebase/auth";
+import {onAuthStateChanged, signInWithPopup, signOut} from "firebase/auth";
 import {useRouter} from "next/router";
 import React, {useState, createContext, useEffect, useContext} from "react";
 
@@ -36,19 +30,6 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
-  const loginWithProvider = async (provider: GithubAuthProvider | GoogleAuthProvider) => {
-    try {
-      await signInWithPopup(auth, githubProvider);
-      if (router.query && router.query.from && typeof router.query.from === "string") {
-        router.push(router.query.from);
-      } else {
-        router.push("/chat");
-      }
-    } catch (error) {
-      error;
-    }
-  };
 
   const loginWithGithub = async () => {
     await signInWithPopup(auth, githubProvider);
