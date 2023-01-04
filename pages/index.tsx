@@ -1,42 +1,47 @@
-import {AiOutlineGithub, AiOutlineGoogle} from "react-icons/ai";
+import Image from "next/image";
 
-import {useAuth} from "../context/AuthContext";
+import ChatterLogo from "../public/chatter-logo.svg";
+import ChatterHi from "../public/chatter-hi.svg";
+import ChatterBg from '../public/chatter-desktop-bg.svg';
+import LoginButton from "../components/LoginButton";
 
 export default function Home() {
-  const {loginWithGithub, loginWithGoogle} = useAuth();
-
   return (
-    <section className="px-6 py-8 bg-dark-blue h-screen min-h-screen text-white">
-      <div className="space-y-8">
-        <h1 className="text-6xl font-bold text-center">
-          Welcome to <span className="text-light-teal">Chatter</span>
-        </h1>
-        <div className="max-w-lg rounded-xl bg-gray-blue px-6 py-4 space-y-4 shadow-md sm:m-auto">
-          <h1 className="text-4xl font-bold text-center text-light-teal">Login to your account</h1>
-          <ul className="bg-light-cyan text-dark-blue p-4 rounded-xl space-y-4 text-lg">
+    <section className="relative h-screen min-h-screen px-8 text-white bg-gradient-to-b from-jet-500 to-orchid-crayola-800">
+      <div className="flex flex-col h-full justify-evenly sm:flex-row sm:justify-center sm:items-center sm:gap-x-40 ">
+        <div className="absolute flex-1 flex-shrink-0 hidden opacity-25 left-20 sm:block">
+        <Image priority alt="Chatter Logo" src={ChatterBg}/>
+        </div>
+        <div className="mx-auto w-fit sm:mx-0 sm:relative">
+          <Image priority alt="Chatter Logo" src={ChatterLogo} width={540} />
+          <h2 className="absolute right-0 hidden mr-3 text-3xl font-light text-orchid-crayola-500/10 text-end sm:block sm:text-6xl -bottom-[4.5rem]">
+            for everyone
+          </h2>
+          <h2 className="absolute right-0 hidden mr-3 text-3xl font-light text-orchid-crayola-500/30 text-end sm:block sm:text-6xl -bottom-9">
+            for everyone
+          </h2>
+          <h2 className="relative mr-3 text-3xl font-light text-orchid-crayola-500 text-end sm:text-6xl">
+            for everyone
+          </h2>
+        </div>
+        <div className="w-full space-y-4 sm:max-w-lg">
+          <h3 className="text-xl font-medium text-center sm:text-2xl sm:text-start sm:ml-6">Login to your account</h3>
+          <ul className="space-y-3">
             <li>
-              <span className="text-light-teal text-xl align-middle pr-2">*</span>Get access to
-              chatter with your github account
+              <LoginButton type="google" />
             </li>
             <li>
-              <span className="text-light-teal text-xl align-middle pr-2">*</span>Create chat rooms,
-              chat with your friends or make new ones!
+              <LoginButton type="github" />
             </li>
           </ul>
-          <div className="flex flex-col justify-center gap-2">
-            <button
-              className="py-2 px-4 bg-black cursor-pointer hover:bg-light-teal transition-colors duration-200 text-light-cyan rounded-lg font-bold flex items-center gap-2 text-xl"
-              onClick={loginWithGithub}
-            >
-              <AiOutlineGithub className="text-2xl" /> Login with Github
-            </button>
-            <button
-              className="py-2 px-4 bg-slate-200 cursor-pointer hover:bg-light-teal transition-colors duration-200 text-black rounded-lg font-bold flex items-center gap-2 text-xl"
-              onClick={loginWithGoogle}
-            >
-              <AiOutlineGoogle className="text-2xl" /> Login with Google
-            </button>
-          </div>
+        </div>
+        <div className="basis-[20%] sm:hidden">
+          <Image
+            priority
+            alt="Chatter Logo"
+            className="absolute bottom-0 right-10"
+            src={ChatterHi}
+          />
         </div>
       </div>
     </section>
