@@ -1,9 +1,10 @@
 import {User, onAuthStateChanged, signInWithPopup, signOut} from "firebase/auth";
+import {doc, getDoc, setDoc} from "firebase/firestore";
 import {useRouter} from "next/router";
-import React, {useState, createContext, useEffect, useContext} from "react";
-import {addDoc, collection, doc, getDoc, setDoc} from "firebase/firestore";
+import React, {createContext, useContext, useEffect, useState} from "react";
 
 import {auth, db, githubProvider, googleProvider} from "../firebase/firebase";
+1;
 
 type Roles = "admin" | "user";
 interface IUser {
@@ -43,7 +44,6 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
 
   const handleAuth = async (user: User) => {
     setLoading(true);
-    if (!user) return;
     const docSnap = await getDoc(doc(db, "users", user.uid));
 
     const data = docSnap.data() as {role?: Roles};
@@ -62,9 +62,9 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
     });
 
     if (router.query && router.query.from && typeof router.query.from === "string") {
-      router.push(router.query.from);
+      await router.push(router.query.from);
     } else {
-      router.push("/chat");
+      await router.push("/chat");
     }
     setLoading(false);
   };

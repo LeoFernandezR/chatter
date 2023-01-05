@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import ChatterLogo from "../public/chatter-logo.svg";
 import ChatterHi from "../public/chatter-hi.svg";
-import ChatterBg from '../public/chatter-desktop-bg.svg';
+import ChatterBg from "../public/chatter-desktop-bg.svg";
 import LoginButton from "../components/LoginButton";
 
 export default function Home() {
@@ -10,7 +10,7 @@ export default function Home() {
     <section className="relative h-screen min-h-screen px-8 text-white bg-gradient-to-b from-jet-500 to-orchid-crayola-800">
       <div className="flex flex-col h-full justify-evenly sm:flex-row sm:justify-center sm:items-center sm:gap-x-40 ">
         <div className="absolute flex-1 flex-shrink-0 hidden opacity-25 left-20 sm:block">
-        <Image priority alt="Chatter Logo" src={ChatterBg}/>
+          <Image priority alt="Chatter Logo" src={ChatterBg} />
         </div>
         <div className="mx-auto w-fit sm:mx-0 sm:relative">
           <Image priority alt="Chatter Logo" src={ChatterLogo} width={540} />
@@ -25,7 +25,9 @@ export default function Home() {
           </h2>
         </div>
         <div className="w-full space-y-4 sm:max-w-lg">
-          <h3 className="text-xl font-medium text-center sm:text-2xl sm:text-start sm:ml-6">Login to your account</h3>
+          <h3 className="text-xl font-medium text-center sm:text-2xl sm:text-start sm:ml-6">
+            Login to your account
+          </h3>
           <ul className="space-y-3">
             <li>
               <LoginButton type="google" />
