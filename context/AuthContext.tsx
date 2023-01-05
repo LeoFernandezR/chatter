@@ -1,17 +1,20 @@
-import {onAuthStateChanged, signInWithPopup, signOut} from "firebase/auth";
+import {User, onAuthStateChanged, signInWithPopup, signOut} from "firebase/auth";
 import {useRouter} from "next/router";
 import React, {useState, createContext, useEffect, useContext} from "react";
+import {addDoc, collection, doc, getDoc, setDoc} from "firebase/firestore";
 
-import {auth, githubProvider, googleProvider} from "../firebase/firebase";
+import {auth, db, githubProvider, googleProvider} from "../firebase/firebase";
 
-interface User {
+type Roles = "admin" | "user";
+interface IUser {
   uid: string;
   displayName: string | null;
   photoURL: string | null;
+  role: Roles;
 }
 
 interface ContextValues {
-  user: User | null;
+  user: IUser | null;
   loginWithGithub: VoidFunction;
   loginWithGoogle: VoidFunction;
   logout: VoidFunction;
@@ -27,25 +30,43 @@ const AuthContext = createContext<ContextValues>({
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthContextProvider = ({children}: {children: React.ReactNode}) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [_user, setUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const loginWithGithub = async () => {
     await signInWithPopup(auth, githubProvider);
-    if (router.query && router.query.from && typeof router.query.from === "string") {
-      router.push(router.query.from);
-    } else {
-      router.push("/chat");
-    }
   };
   const loginWithGoogle = async () => {
     await signInWithPopup(auth, googleProvider);
+  };
+
+  const handleAuth = async (user: User) => {
+    setLoading(true);
+    if (!user) return;
+    const docSnap = await getDoc(doc(db, "users", user.uid));
+
+    const data = docSnap.data() as {role?: Roles};
+
+    if (!data?.role) {
+      await setDoc(doc(db, "users", user.uid), {
+        role: "user",
+      });
+    }
+
+    setUser({
+      uid: user.uid,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      role: data?.role || "user",
+    });
+
     if (router.query && router.query.from && typeof router.query.from === "string") {
       router.push(router.query.from);
     } else {
       router.push("/chat");
     }
+    setLoading(false);
   };
 
   const logout = async () => {
@@ -56,22 +77,18 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUser({
-          uid: user.uid,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        });
+        handleAuth(user);
       } else {
         setUser(null);
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, []);
 
   return (
-    <AuthContext.Provider value={{user, loginWithGithub, loginWithGoogle, logout}}>
+    <AuthContext.Provider value={{user: _user, loginWithGithub, loginWithGoogle, logout}}>
       {loading ? null : children}
     </AuthContext.Provider>
   );

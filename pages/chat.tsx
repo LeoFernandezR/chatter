@@ -20,8 +20,8 @@ const Chat = () => {
   }, [rooms, push, query.roomID]);
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen gap-2 text-xl">
-      <div className="flex-1 flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center min-h-screen gap-2 text-xl">
+      <div className="flex flex-col items-center justify-center flex-1">
         <div>
           <h1 className="text-3xl">Rooms</h1>
           <ul>
@@ -41,7 +41,7 @@ const Chat = () => {
           </ul>
           <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
             <input
-              className="border-black border rounded px-2"
+              className="px-2 border border-black rounded"
               placeholder="create room"
               type="text"
               value={roomName}
@@ -64,10 +64,10 @@ const Chat = () => {
         </div>
       </div>
       <div />
-      <div className="flex-1 flex flex-col justify-center items-center">
+      <div className="flex flex-col items-center justify-center flex-1">
         <RoomMessages />
       </div>
-      <button className="py-2 px-4 bg-stone-900 text-white rounded-lg" onClick={logout}>
+      <button className="px-4 py-2 text-white rounded-lg bg-stone-900" onClick={logout}>
         Logout
       </button>
     </div>
