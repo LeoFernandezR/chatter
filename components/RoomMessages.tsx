@@ -1,6 +1,6 @@
+import Avatar from "boring-avatars";
 import {useRouter} from "next/router";
 import React, {useState} from "react";
-import Avatar from "boring-avatars";
 
 import useMessages from "../hooks/useMessages";
 

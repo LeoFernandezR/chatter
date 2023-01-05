@@ -3,6 +3,7 @@ import {doc, getDoc, setDoc} from "firebase/firestore";
 import {useRouter} from "next/router";
 import React, {createContext, useContext, useEffect, useState} from "react";
 
+import Loader from "../components/pageStates/Loader";
 import {auth, db, githubProvider, googleProvider} from "../firebase/firebase";
 1;
 
@@ -19,6 +20,8 @@ interface ContextValues {
   loginWithGithub: VoidFunction;
   loginWithGoogle: VoidFunction;
   logout: VoidFunction;
+  isAdmin: boolean;
+  loading: boolean;
 }
 
 const AuthContext = createContext<ContextValues>({
@@ -26,6 +29,8 @@ const AuthContext = createContext<ContextValues>({
   loginWithGithub: () => {},
   loginWithGoogle: () => {},
   logout: () => {},
+  isAdmin: false,
+  loading: true,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -69,10 +74,11 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
     setLoading(false);
   };
 
-  const logout = async () => {
-    await signOut(auth);
-    setUser(null);
+  const logout = () => {
+    signOut(auth);
   };
+
+  const isAdmin = _user?.role === "admin";
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -88,8 +94,10 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
   }, []);
 
   return (
-    <AuthContext.Provider value={{user: _user, loginWithGithub, loginWithGoogle, logout}}>
-      {loading ? null : children}
+    <AuthContext.Provider
+      value={{user: _user, loginWithGithub, loginWithGoogle, logout, loading, isAdmin}}
+    >
+      {loading ? <Loader /> : children}
     </AuthContext.Provider>
   );
 };

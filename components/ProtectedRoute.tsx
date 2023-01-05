@@ -3,6 +3,8 @@ import React, {useEffect} from "react";
 
 import {useAuth} from "../context/AuthContext";
 
+import Loader from "./pageStates/Loader";
+
 const ProtectedRoute = ({children}: {children: React.ReactNode}) => {
   const {user} = useAuth();
   const router = useRouter();
@@ -16,7 +18,7 @@ const ProtectedRoute = ({children}: {children: React.ReactNode}) => {
     }
   }, [router, user]);
 
-  return <>{user ? children : null}</>;
+  return <>{user ? children : <Loader />}</>;
 };
 
 export default ProtectedRoute;

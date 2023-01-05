@@ -1,16 +1,16 @@
-import "../styles/globals.css";
 import "@fontsource/poppins";
 import "@fontsource/poppins/300.css";
-import "@fontsource/poppins/500.css";
 import "@fontsource/poppins/400-italic.css";
+import "@fontsource/poppins/500.css";
 import "@fontsource/poppins/700.css";
+import "../styles/globals.css";
 
 import type {AppProps} from "next/app";
 
 import {useRouter} from "next/router";
 
-import {AuthContextProvider} from "../context/AuthContext";
 import ProtectedRoute from "../components/ProtectedRoute";
+import {AuthContextProvider} from "../context/AuthContext";
 
 const noAuthRequired = ["/"];
 
