@@ -8,12 +8,14 @@ import Loader from "./pageStates/Loader";
 const ProtectedRoute = ({children}: {children: React.ReactNode}) => {
   const {user} = useAuth();
   const router = useRouter();
+  const fromUnabled = ["/register"];
+  const from = fromUnabled.includes(router.asPath) ? undefined : {from: router.asPath};
 
   useEffect(() => {
     if (!user) {
       router.push({
         pathname: "/",
-        query: {from: router.asPath},
+        query: from,
       });
     }
   }, [router, user]);
