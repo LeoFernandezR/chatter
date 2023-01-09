@@ -1,101 +1,53 @@
-import {User, onAuthStateChanged, signInWithPopup, signOut} from "firebase/auth";
-import {doc, getDoc, setDoc} from "firebase/firestore";
-import {useRouter} from "next/router";
-import React, {createContext, useContext, useEffect, useState} from "react";
+import React, {createContext, useContext, useState} from "react";
 
 import Loader from "../components/pageStates/Loader";
-import {auth, db, githubProvider, googleProvider} from "../firebase/firebase";
+
+import useFirebaseAuth from "./hooks/useFirebaseAuth";
+import useUserMetadata, {UserMetadata} from "./hooks/useUserMetadata";
 1;
 
 type Roles = "admin" | "user";
-interface IUser {
-  uid: string;
-  displayName: string | null;
-  photoURL: string | null;
-  role: Roles;
-}
+
+type AuthState = "login" | "register";
 
 interface ContextValues {
-  user: IUser | null;
+  user: UserMetadata | null;
   loginWithGithub: VoidFunction;
   loginWithGoogle: VoidFunction;
   logout: VoidFunction;
+  saveUsername: ({
+    username,
+    userId,
+  }: {
+    username: string;
+    userId: UserMetadata["uid"];
+  }) => Promise<void>;
   isAdmin: boolean;
   loading: boolean;
 }
 
-const AuthContext = createContext<ContextValues>({
-  user: null,
-  loginWithGithub: () => {},
-  loginWithGoogle: () => {},
-  logout: () => {},
-  isAdmin: false,
-  loading: true,
-});
+const AuthContext = createContext<ContextValues>(null!);
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthContextProvider = ({children}: {children: React.ReactNode}) => {
-  const [_user, setUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  const {firebaseUser, loginWithGithub, loginWithGoogle, logout} = useFirebaseAuth(setLoading);
+  const {saveUsername, user} = useUserMetadata(firebaseUser, setLoading);
 
-  const loginWithGithub = async () => {
-    await signInWithPopup(auth, githubProvider);
-  };
-  const loginWithGoogle = async () => {
-    await signInWithPopup(auth, googleProvider);
-  };
-
-  const handleAuth = async (user: User) => {
-    setLoading(true);
-    const docSnap = await getDoc(doc(db, "users", user.uid));
-
-    const data = docSnap.data() as {role?: Roles};
-
-    if (!data?.role) {
-      await setDoc(doc(db, "users", user.uid), {
-        role: "user",
-      });
-    }
-
-    setUser({
-      uid: user.uid,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      role: data?.role || "user",
-    });
-
-    if (router.query && router.query.from && typeof router.query.from === "string") {
-      await router.push(router.query.from);
-    } else {
-      await router.push("/chat");
-    }
-    setLoading(false);
-  };
-
-  const logout = () => {
-    signOut(auth);
-  };
-
-  const isAdmin = _user?.role === "admin";
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        handleAuth(user);
-      } else {
-        setUser(null);
-        setLoading(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const isAdmin = user?.role === "admin";
 
   return (
     <AuthContext.Provider
-      value={{user: _user, loginWithGithub, loginWithGoogle, logout, loading, isAdmin}}
+      value={{
+        user,
+        loginWithGithub,
+        loginWithGoogle,
+        logout,
+        loading,
+        isAdmin,
+        saveUsername,
+      }}
     >
       {loading ? <Loader /> : children}
     </AuthContext.Provider>
