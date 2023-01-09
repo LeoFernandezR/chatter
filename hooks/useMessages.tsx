@@ -8,7 +8,7 @@ import {db} from "../firebase/firebase";
 export interface Message {
   message: string;
   timestamp: string;
-  userName: string;
+  username: string;
   userID: string;
 }
 
@@ -25,7 +25,7 @@ const useMessages = () => {
     await addDoc(collection(db, "rooms", roomID, "messages"), {
       message: message,
       timestamp: Timestamp.now(),
-      userName: user?.displayName,
+      username: user?.username,
       userID: user?.uid,
     });
   };

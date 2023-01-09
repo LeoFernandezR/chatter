@@ -6,12 +6,7 @@ import useMessages from "../hooks/useMessages";
 
 const RoomMessages = () => {
   const [message, setMessage] = useState("");
-  const {query} = useRouter();
   const {sendMessage, messages} = useMessages();
-
-  if (!query.roomID) {
-    return null;
-  }
 
   return (
     <div>
@@ -27,7 +22,7 @@ const RoomMessages = () => {
               />
             </div>
             <div className="flex-1">
-              <h1 className="font-bold">{message.userName}</h1>
+              <h1 className="font-bold">{message.username}</h1>
               <div>{message.message}</div>
             </div>
           </li>
