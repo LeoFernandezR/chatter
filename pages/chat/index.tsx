@@ -7,7 +7,7 @@ import {NextPageWithLayout} from "../_app";
 const Chat: NextPageWithLayout = () => {
   const {logout} = useAuth();
 
-  return <button onClick={logout}>Logout</button>;
+  return <div>chat</div>;
 };
 
 Chat.getLayout = (page: ReactElement) => {
