@@ -9,7 +9,7 @@ import Login from "../components/Login";
 export default function Home() {
   return (
     <Background>
-      <div className="flex flex-col h-full justify-evenly sm:flex-row sm:justify-center sm:items-center sm:gap-x-40 ">
+      <div className="flex flex-col h-full px-8 justify-evenly sm:flex-row sm:justify-center sm:items-center sm:gap-x-40">
         <div className="absolute flex-1 flex-shrink-0 hidden opacity-25 left-20 sm:block">
           <Image priority alt="Chatter Logo" src={ChatterBg} />
         </div>
@@ -18,7 +18,7 @@ export default function Home() {
           <h2 className="select-none absolute right-0 hidden mr-3 text-3xl font-light text-orchid-crayola-500/10 text-end sm:block sm:text-6xl -bottom-[4.5rem]">
             for everyone
           </h2>
-          <h2 className="select-none absolute right-0 hidden mr-3 text-3xl font-light text-orchid-crayola-500/30 text-end sm:block sm:text-6xl -bottom-9">
+          <h2 className="absolute right-0 hidden mr-3 text-3xl font-light select-none text-orchid-crayola-500/30 text-end sm:block sm:text-6xl -bottom-9">
             for everyone
           </h2>
           <h2 className="relative mr-3 text-3xl font-light text-orchid-crayola-500 text-end sm:text-6xl">

@@ -9,7 +9,7 @@ import Register from "../components/Register";
 const register = () => {
   return (
     <Background>
-      <div className="flex flex-col h-full justify-evenly sm:flex-row sm:justify-center sm:items-center sm:gap-x-40 ">
+      <div className="flex flex-col h-full px-8 justify-evenly sm:flex-row sm:justify-center sm:items-center sm:gap-x-40">
         <div className="absolute flex-1 flex-shrink-0 hidden opacity-25 left-20 sm:block">
           <Image priority alt="Chatter Logo" src={ChatterBg} />
         </div>
