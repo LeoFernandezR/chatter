@@ -18,10 +18,10 @@ export interface Room {
   name: string;
   timestamp: string;
 }
-type Rooms = Room[] | null;
+type Rooms = Room[];
 
 const useRooms = () => {
-  const [rooms, setRooms] = useState<Rooms>(null);
+  const [rooms, setRooms] = useState<Rooms>([]);
 
   const createRoom = async (roomName: Room["name"]) => {
     const docSnap = await getDoc(doc(db, "rooms", roomName.toLowerCase()));

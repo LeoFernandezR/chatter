@@ -1,3 +1,26 @@
 @tailwind base;
+
+
+* {
+  scrollbar-width: 8px;
+  scrollbar-color: theme("colors.orchid-crayola.700") theme("colors.jet.500");
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: theme("colors.jet.500");
+  border-radius: 14px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: theme("colors.orchid-crayola.700");
+  border-radius: 14px;
+}
+
+
 @tailwind components;
 @tailwind utilities;
+
