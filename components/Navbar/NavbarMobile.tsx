@@ -2,7 +2,7 @@ import {Transition} from "@headlessui/react";
 import React, {useState} from "react";
 import {Icon} from "@iconify/react";
 
-import Background from "../../ui/Background";
+import Background from "../ui/Background";
 
 import Navbar from "./Navbar";
 interface Props {}

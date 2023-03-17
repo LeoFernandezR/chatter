@@ -4,7 +4,7 @@ import {useAuth} from "../context/AuthContext";
 
 type Props = {};
 
-const Register = (props: Props) => {
+const RegisterForm = (props: Props) => {
   const {saveUsername, user} = useAuth();
   const [input, setInput] = useState({username: "", confirmUsername: ""});
   const [error, setError] = useState("");
@@ -22,8 +22,9 @@ const Register = (props: Props) => {
     setSubmitting(true);
 
     if (!input.username || !input.confirmUsername) {
-      return setError("fields missing...");
       setSubmitting(false);
+
+      return setError("fields missing...");
     }
     if (input.username !== input.confirmUsername) {
       setSubmitting(false);
@@ -78,4 +79,4 @@ const Register = (props: Props) => {
   );
 };
 
-export default Register;
+export default RegisterForm;

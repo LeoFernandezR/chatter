@@ -4,7 +4,7 @@ import Background from "../components/ui/Background";
 import ChatterBg from "../public/chatter-desktop-bg.svg";
 import ChatterHi from "../public/chatter-hi.svg";
 import ChatterLogo from "../public/chatter-logo.svg";
-import Login from "../components/Login";
+import LoginButton from "../components/LoginButton";
 
 export default function Home() {
   return (
@@ -26,7 +26,17 @@ export default function Home() {
           </h2>
         </div>
         <div className="w-full space-y-4 sm:max-w-lg">
-          <Login />
+          <h3 className="text-xl font-medium text-center sm:text-2xl sm:text-start sm:ml-6">
+            Login to your account
+          </h3>
+          <ul className="space-y-3">
+            <li>
+              <LoginButton type="google" />
+            </li>
+            <li>
+              <LoginButton type="github" />
+            </li>
+          </ul>
         </div>
         <div className="basis-[20%] sm:hidden">
           <Image

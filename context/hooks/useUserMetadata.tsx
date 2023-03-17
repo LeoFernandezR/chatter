@@ -30,8 +30,6 @@ const useUserMetadata = (firebaseUser: User | null, setLoading: (val: boolean) =
   const router = useRouter();
 
   const redirect = async () => {
-    const RedirectRoutes = ["/", "/register"];
-
     if (router.query && router.query.from && typeof router.query.from === "string") {
       await router.push(router.query.from);
     } else if (RedirectRoutes.includes(router.pathname)) {
@@ -96,12 +94,19 @@ const useUserMetadata = (firebaseUser: User | null, setLoading: (val: boolean) =
       username: null,
     });
 
+    if (typeof router.query.from === "string") {
+      await router.push({
+        pathname: "/register",
+        query: {from: router.query.from.replace("/", "")},
+      });
+
+      return setLoading(false);
+    }
     await router.push({
       pathname: "/register",
-      query: {from: (router.query.from as string).replace("/", "")},
     });
 
-    setLoading(false);
+    return setLoading(false);
   };
 
   useEffect(() => {

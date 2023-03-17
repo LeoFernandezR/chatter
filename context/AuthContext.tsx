@@ -1,14 +1,14 @@
 import React, {createContext, useContext, useState} from "react";
 
-import Loader from "../components/pageStates/Loader";
+import {LoadingPage} from "../components/ui/Loaders";
 
 import useFirebaseAuth from "./hooks/useFirebaseAuth";
 import useUserMetadata, {UserMetadata} from "./hooks/useUserMetadata";
 1;
 
-type Roles = "admin" | "user";
+// type Roles = "admin" | "user";
 
-type AuthState = "login" | "register";
+// type AuthState = "login" | "register";
 
 interface ContextValues {
   user: UserMetadata | null;
@@ -49,7 +49,7 @@ export const AuthContextProvider = ({children}: {children: React.ReactNode}) => 
         saveUsername,
       }}
     >
-      {loading ? <Loader /> : children}
+      {loading ? <LoadingPage /> : children}
     </AuthContext.Provider>
   );
 };

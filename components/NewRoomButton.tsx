@@ -9,8 +9,6 @@ type Props = {};
 const NewRoomButton = ({}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log(isOpen);
-
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
 
@@ -21,7 +19,7 @@ const NewRoomButton = ({}: Props) => {
         <Tooltip.Root delayDuration={0}>
           <Tooltip.Trigger asChild>
             <button
-              className="flex items-center gap-1 font-medium text-orchid-crayola-500"
+              className="flex items-center gap-1 font-medium outline-none text-orchid-crayola-500"
               onClick={openModal}
             >
               <Icon className="text-xl" icon="material-symbols:add" />

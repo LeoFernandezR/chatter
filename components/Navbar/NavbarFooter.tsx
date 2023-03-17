@@ -1,5 +1,5 @@
-import {useAuth} from "../../../context/AuthContext";
-import LogoutButton from "../../LogoutButton";
+import {useAuth} from "../../context/AuthContext";
+import LogoutButton from "../LogoutButton";
 
 type Props = {};
 

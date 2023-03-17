@@ -4,7 +4,7 @@ import Background from "../components/ui/Background";
 import ChatterBg from "../public/chatter-desktop-bg.svg";
 import ChatterHi from "../public/chatter-hi.svg";
 import ChatterLogo from "../public/chatter-logo.svg";
-import Register from "../components/Register";
+import RegisterForm from "../components/RegisterForm";
 
 const register = () => {
   return (
@@ -26,7 +26,7 @@ const register = () => {
           </h2>
         </div>
         <div className="w-full space-y-4 sm:max-w-lg">
-          <Register />
+          <RegisterForm />
         </div>
         <div className="basis-[20%] sm:hidden">
           <Image
