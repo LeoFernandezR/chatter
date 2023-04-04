@@ -1,47 +1,43 @@
-import React, {useEffect, useState} from "react";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {useForm} from "react-hook-form";
+import * as yup from "yup";
+import {shallow} from "zustand/shallow";
 
-import {useAuth} from "../context/AuthContext";
+import useAuthStore from "@/store/auth";
 
-type Props = {};
+// import {useAuth} from "../context/AuthContext";
 
-const RegisterForm = (props: Props) => {
-  const {saveUsername, user} = useAuth();
-  const [input, setInput] = useState({username: "", confirmUsername: ""});
-  const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+const schema = yup.object({
+  username: yup.string().required(),
+  confirmUsername: yup
+    .string()
+    .required()
+    .oneOf([yup.ref("username")], "Usernames must match"),
+});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput((prevInput) => ({
-      ...prevInput,
-      [e.target.name]: e.target.value,
-    }));
-  };
+type RegisterFormData = yup.InferType<typeof schema>;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSubmitting(true);
+const RegisterForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: {errors, isSubmitting},
+    setError,
+  } = useForm<RegisterFormData>({resolver: yupResolver(schema)});
+  // const {saveUsername, user} = useAuth();
+  const {saveUsername, user} = useAuthStore(
+    (state) => ({saveUsername: state.saveUsername, user: state.user}),
+    shallow,
+  );
 
-    if (!input.username || !input.confirmUsername) {
-      setSubmitting(false);
+  const onSubmit = async ({username}: RegisterFormData) => {
+    if (!user) return;
 
-      return setError("fields missing...");
+    try {
+      await saveUsername({username: username, uid: user.uid});
+    } catch (error) {
+      setError("username", {message: (error as Error).message});
     }
-    if (input.username !== input.confirmUsername) {
-      setSubmitting(false);
-
-      return setError("diferent usernames...");
-    }
-
-    if (user) {
-      try {
-        await saveUsername({username: input.username, userId: user.uid});
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        }
-      }
-    }
-    setSubmitting(false);
   };
 
   return (
@@ -49,29 +45,29 @@ const RegisterForm = (props: Props) => {
       <h3 className="text-xl font-medium text-center sm:text-2xl sm:text-start sm:ml-6">
         Finish your registration
       </h3>
-      <form className="space-y-3" onSubmit={handleSubmit}>
+      <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
         <input
           className="w-full px-6 py-2 text-xl rounded-2xl bg-jet-500 placeholder:text-orchid-crayola-700 focus:outline-none focus:ring focus:ring-orchid-crayola-500 sm:text-2xl"
-          name="username"
+          {...register("username")}
           placeholder="Enter username"
-          value={input.username}
-          onChange={handleChange}
         />
+        {errors.username && <p className="ml-4 text-sm text-red-500">{errors.username?.message}</p>}
+
         <input
           className="w-full px-6 py-2 text-xl rounded-2xl bg-jet-500 placeholder:text-orchid-crayola-700 focus:outline-none focus:ring focus:ring-orchid-crayola-500 sm:text-2xl"
-          name="confirmUsername"
           placeholder="Confirm username"
-          value={input.confirmUsername}
-          onChange={handleChange}
+          {...register("confirmUsername")}
         />
-        {error && <p className="ml-4 text-sm text-red-500">{error}</p>}
+        {errors.confirmUsername && (
+          <p className="ml-4 text-sm text-red-500">{errors.confirmUsername?.message}</p>
+        )}
         <div className="flex justify-center">
           <button
             className="w-full px-6 py-2 italic font-bold transition-colors duration-300 ease-in-out shadow-lg cursor-pointer rounded-2xl bg-baby-powder-800/40 hover:bg-orchid-crayola-500 focus:outline-none focus:bg-orchid-crayola-500 shadow-orchid-crayola-800 sm:text-2xl disabled:cursor-not-allowed disabled:bg-jet-800"
-            disabled={submitting}
+            disabled={isSubmitting}
             type="submit"
           >
-            {submitting ? "Submitting..." : "Register"}
+            {isSubmitting ? "Submitting..." : "Register"}
           </button>
         </div>
       </form>

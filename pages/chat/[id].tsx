@@ -1,15 +1,13 @@
 import {useRouter} from "next/router";
 import React, {ReactElement} from "react";
 
-import {useAuth} from "../../context/AuthContext";
 import {NextPageWithLayout} from "../_app";
 import Layout from "../../components/layout/Layout";
 
 type Props = {};
 
-const ChatRoom: NextPageWithLayout = (props: Props) => {
+const ChatRoom: NextPageWithLayout = ({}: Props) => {
   const router = useRouter();
-  const {logout} = useAuth();
 
   return (
     <div>

@@ -1,13 +1,10 @@
 import {ReactElement} from "react";
 
 import Layout from "../../components/layout/Layout";
-import {useAuth} from "../../context/AuthContext";
 import {NextPageWithLayout} from "../_app";
 import NavbarMobile from "../../components/Navbar/NavbarMobile";
 
 const Chat: NextPageWithLayout = () => {
-  const {user} = useAuth();
-
   return (
     <section className="flex flex-col h-full">
       <header className="flex items-center gap-4">

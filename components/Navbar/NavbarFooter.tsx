@@ -1,10 +1,11 @@
-import {useAuth} from "../../context/AuthContext";
 import LogoutButton from "../LogoutButton";
+
+import useAuthStore from "@/store/auth";
 
 type Props = {};
 
 const NavbarFooter = ({}: Props) => {
-  const {user} = useAuth();
+  const user = useAuthStore((state) => state.user);
 
   return (
     <footer className="flex items-center justify-between pt-2">

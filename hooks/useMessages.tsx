@@ -2,8 +2,9 @@ import {addDoc, collection, onSnapshot, orderBy, query, Timestamp} from "firebas
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 
-import {useAuth} from "../context/AuthContext";
 import {db} from "../firebase/firebase";
+
+import useAuthStore from "@/store/auth";
 
 export interface Message {
   message: string;
@@ -14,7 +15,9 @@ export interface Message {
 
 const useMessages = () => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const {user} = useAuth();
+  // const {user} = useAuth();
+  const user = useAuthStore((state) => state.user);
+
   const router = useRouter();
 
   const roomID = router.query.roomID as string;

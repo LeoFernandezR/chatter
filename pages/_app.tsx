@@ -8,11 +8,12 @@ import "../styles/globals.css";
 import type {AppProps} from "next/app";
 
 import {useRouter} from "next/router";
-import {ReactElement, ReactNode} from "react";
+import {ReactElement, ReactNode, useEffect} from "react";
 import {NextPage} from "next";
 
-import ProtectedRoute from "../components/ProtectedRoute";
-import {AuthContextProvider} from "../context/AuthContext";
+import useAuthStore from "@/store/auth";
+import {LoadingPage} from "@/components/ui/Loaders";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const noAuthRequired = ["/"];
 
@@ -26,16 +27,30 @@ type AppPropsWithLayout = AppProps & {
 
 export default function App({Component, pageProps}: AppPropsWithLayout) {
   const router = useRouter();
+  const handleAuthStateChange = useAuthStore((state) => state.handleAuthStateChange);
+  const loading = useAuthStore((state) => state.loading);
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
+  useEffect(() => {
+    const unsubscribe = handleAuthStateChange();
+
+    return () => {
+      unsubscribe();
+    };
+  }, [handleAuthStateChange]);
+
+  if (loading) {
+    return <LoadingPage />;
+  }
+
   return (
-    <AuthContextProvider>
+    <>
       {noAuthRequired.includes(router.pathname) ? (
         <Component {...pageProps} />
       ) : (
         <ProtectedRoute>{getLayout(<Component {...pageProps} />)}</ProtectedRoute>
       )}
-    </AuthContextProvider>
+    </>
   );
 }

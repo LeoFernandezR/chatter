@@ -1,18 +1,22 @@
 import {Icon} from "@iconify/react";
 import React from "react";
+import {shallow} from "zustand/shallow";
 
-import {useAuth} from "../context/AuthContext";
+import useAuthStore from "@/store/auth";
 
 const LoginProviders = ["github", "google"] as const;
 
-type LoginProvider = typeof LoginProviders[number];
+type LoginProvider = (typeof LoginProviders)[number];
 
 interface Props {
   type: LoginProvider;
 }
 
 const LoginButton: React.FC<Props> = ({type}) => {
-  const {loginWithGithub, loginWithGoogle} = useAuth();
+  const {loginWithGithub, loginWithGoogle} = useAuthStore(
+    (state) => ({loginWithGithub: state.signInWithGithub, loginWithGoogle: state.signInWithGoogle}),
+    shallow,
+  );
 
   const config = {
     google: {
